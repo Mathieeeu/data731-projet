@@ -35,3 +35,7 @@ def nivCorrAvecTarget(data):
     plt.show()
     
 nivCorrAvecTarget(df)
+
+#Corrélation de deux variables par rapport au target du coup (3 variables)
+#Ex : acp+bage = target
+# Z = corr(cp,target)

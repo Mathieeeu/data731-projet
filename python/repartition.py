@@ -19,3 +19,7 @@ def repartition_maladie(data):
 
 
 repartition_maladie(df)
+
+# Filtrer les lignes où 'target' vaut 1
+df_target_1 = df[df['target'] == 1]
+
