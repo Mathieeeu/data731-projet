@@ -14,11 +14,10 @@ def PairPlot(df):
 
     df.drop('legend\ntarget:', axis=1, inplace=True)
 
-
 filename = "cleaned_merged_heart_dataset.csv"
 df = pd.read_csv('./data/' + filename)
 
+print(df.index(0))
+
 # matrice_correlation(df)
-PairPlot(df)
-
-
+# PairPlot(df)

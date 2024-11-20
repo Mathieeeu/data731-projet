@@ -10,7 +10,7 @@ df = pd.read_csv("./data/"+file_name)
 #Corrélation heatmap
 def matriceCorrelation(data):
     numeric_df = data.select_dtypes(include=[np.number]) #s'assurer que l'on a des données numériques
-    df_corr=abs(numeric_df.corr())
+    df_corr=numeric_df.corr()
     
     plt.figure(figsize=(12, 8))
     sns.heatmap(df_corr,annot=True, cmap="magma")
