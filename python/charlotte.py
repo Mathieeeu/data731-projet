@@ -123,4 +123,3 @@ graphique_thalach(df)
 graphique_trestbps(df)
 
 print(df)
-
