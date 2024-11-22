@@ -5,11 +5,6 @@ import numpy as np
 
 
 def repartition_maladie(data):
-    # data_target=data['target']
-    # print(data['target'])
-    # x = data_target.count(0)
-    # y= data_target.count(1)
-    # plt.pie(np.array([x,y]), labels=["Risque faible","Risque élévé"])
     sns.countplot(x='target', data=data)
     plt.title("Distribution des maladies cardiaques")
     plt.show()
@@ -18,9 +13,7 @@ def repartition_maladie(data):
 #repartition_maladie(df)
 
 def repartitionParCaractere(data1, data2, feature, nb_barres):
-
-    count, bins, ignored = plt.hist([data1[feature],data2[feature]], nb_barres , histtype="bar", color=['lightgreen','teal'],edgecolor='black', density=True, label=["Risque élevé", "Rsique faible"])
-    #count, bins, ignored = plt.hist(data2[feature], nb_barres , histtype="barstacked", color='teal',edgecolor='black', density=True)
+    count, bins, ignored = plt.hist([data1[feature],data2[feature]], nb_barres , histtype="bar", color=['lightgreen','teal'],edgecolor='black', density=False, label=["Risque élevé", "Risque faible"])
     plt.legend(prop={'size': 10})
     plt.title(f"Répartition du nombre de personnes à risque selon {feature}")
     plt.show()
@@ -49,7 +42,7 @@ repartitionParCaractere(df_target_1,df_target_0, "thalachh", nb_barres)
 repartitionParCaractere(df_target_1,df_target_0, "exang", 2)
 repartitionParCaractere(df_target_1, df_target_0,"oldpeak", nb_barres)
 repartitionParCaractere(df_target_1, df_target_0,"slope", 4)
-repartitionParCaractere(df_target_1,df_target_0, "ca", 5)
-repartitionParCaractere(df_target_1,df_target_0, "thal", 7)
+repartitionParCaractere(df_target_1,df_target_0, "ca", 4)
+repartitionParCaractere(df_target_1,df_target_0, "thal", 3)
 
 
