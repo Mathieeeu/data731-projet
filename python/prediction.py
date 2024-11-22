@@ -95,6 +95,19 @@ def predire_cible(person, regression=None, decision_tree=None):
     else:
         print(f"Prédiction de la cible pour la personne : {regression.predict(person)[0]}, {decision_tree.predict(person)[0]}")
 
+def get_prediction_dataframe(df, regression):
+    """
+    Création d'un dataframe contenant les prédictions pour chaque entrée du dataframe
+    Input : 
+        - df, le dataframe contenant les données
+        - regression, l'objet de régression linéaire
+    Output : 
+        - un dataframe contenant les prédictions pour chaque entrée du dataframe
+    """
+    df_predictions = df.copy()
+    df_predictions.drop('target', axis=1, inplace=True)
+    df_predictions['prediction'] = regression.predict(df_predictions)
+    return df_predictions
 
 # Graphique de la moyenne de target en fonction d'une clé avec les données réelles puis avec les prédictions
 def graph_prediction_pour_chaque_cle(keys, regression, df):
@@ -111,9 +124,7 @@ def graph_prediction_pour_chaque_cle(keys, regression, df):
         plt.plot(grouped.index, grouped['target'])
 
         # Création d'un dataframe avec toutes les valeurs prédites pour chaque valeur de la clé
-        df_predictions = df.copy()
-        df_predictions.drop('target', axis=1, inplace=True)
-        df_predictions['prediction'] = regression.predict(df_predictions)
+        df_predictions = get_prediction_dataframe(df, regression)
         grouped_predictions = df_predictions.groupby(key).mean()
         plt.plot(grouped_predictions.index, grouped_predictions['prediction'])  
         plt.ylabel(f'target/{key}')
@@ -150,6 +161,10 @@ person = pd.DataFrame({
     'thal':1
 }, index=[0])
 predire_cible(person, regression, decision_tree)
+
+# Dataframe contenant les prédictions pour chaque entrée du dataframe
+df_predictions = get_prediction_dataframe(df, regression)
+print(df_predictions)
 
 # Graphique de la prédiction de la cible en fonction de l'index de la ligne
 keys = ['age', 'sex', 'cp', 'trestbps', 'chol', 'fbs', 'restecg', 'thalachh', 'exang', 'oldpeak', 'slope', 'ca', 'thal']
