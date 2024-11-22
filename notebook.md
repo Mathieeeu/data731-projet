@@ -139,146 +139,147 @@ L'entropie conditionnelle est calculée avec $H(Y|X) = - \sum_{i=1}^{n} p(x_i) \
 Pour prédire la variable cible `target`, on a utilisé un modèle regressif (et un arbre de décision) :
 
 ### 1. Calcul des coefficients :
-    - On a utilisé un modèle de régression pour prédire la variable cible `target` en fonction des autres variables.
-    - On a utilisé la fonction suivante pour générer le modèle : 
 
-    ```python
-    def calcul_coefficients(df):
-        """
-        Calcul des coefficients de la régression linéaire et de l'arbre de décision pour prédire la cible
-        Input : 
-            - df, le dataframe contenant les données
-        Output : 
-            - regression, l'objet de régression linéaire,
-            - decision_tree, l'objet de l'arbre de décision
-        """
-        # Séparation des variables et de la cible
-        variables, results = serparer_variables_cible(df)
+- On a utilisé un modèle de régression pour prédire la variable cible `target` en fonction des autres variables.
+- On a utilisé la fonction suivante pour générer le modèle : 
 
-        # Régression linéaire
-        regression = linear_model.LinearRegression()
-        regression.fit(variables, results)
+```python
+def calcul_coefficients(df):
+    """
+    Calcul des coefficients de la régression linéaire et de l'arbre de décision pour prédire la cible
+    Input : 
+        - df, le dataframe contenant les données
+    Output : 
+        - regression, l'objet de régression linéaire,
+        - decision_tree, l'objet de l'arbre de décision
+    """
+    # Séparation des variables et de la cible
+    variables, results = serparer_variables_cible(df)
 
-        # Arbre de décision
-        decision_tree = tree.DecisionTreeClassifier()
-        decision_tree.fit(variables, results)
+    # Régression linéaire
+    regression = linear_model.LinearRegression()
+    regression.fit(variables, results)
 
-        return regression, decision_tree
-    ```
+    # Arbre de décision
+    decision_tree = tree.DecisionTreeClassifier()
+    decision_tree.fit(variables, results)
 
-    - On obtient les coefficients suivants :
-    
-    ```
-        variable  coefficient
-    0        age    -0.001046
-    1        sex    -0.146262
-    2         cp     0.091528
-    3   trestbps    -0.001005
-    4       chol    -0.000419
-    5        fbs     0.007251
-    6    restecg     0.035307
-    7   thalachh     0.001545
-    8      exang    -0.115519
-    9    oldpeak    -0.030532
-    10     slope     0.172099
-    11        ca    -0.075477
-    12      thal    -0.042790
-    ```
+    return regression, decision_tree
+```
 
-    - On obtient également un arbre de décision qui permet de prédire la variable cible
+- On obtient les coefficients suivants :
+
+```
+    variable  coefficient
+0        age    -0.001046
+1        sex    -0.146262
+2         cp     0.091528
+3   trestbps    -0.001005
+4       chol    -0.000419
+5        fbs     0.007251
+6    restecg     0.035307
+7   thalachh     0.001545
+8      exang    -0.115519
+9    oldpeak    -0.030532
+10     slope     0.172099
+11        ca    -0.075477
+12      thal    -0.042790
+```
+
+- On obtient également un arbre de décision qui permet de prédire la variable cible
 
 ### 2. Prédiction de la variable cible pour une personne
 
-    - On a utilisé la fonction suivante pour prédire la variable cible pour une personne donnée : 
+- On a utilisé la fonction suivante pour prédire la variable cible pour une personne donnée : 
 
-    ```python
-    def predire_cible(person, regression=None, decision_tree=None):
-        """
-        Prédiction de la cible pour une personne
-        Input : 
-            - person, les données de la personne
-            - regression, l'objet de régression linéaire,
-            - decision_tree, l'objet de l'arbre de décision
-        Output : 
-            - la prédiction de la cible pour la personne
-        """
-        if regression is None and decision_tree is None:
-            print("Erreur : regression et decision_tree ne peuvent pas être tous les deux nuls")
-        elif regression is None:
-            print(f"Prédiction de la cible pour la personne : {decision_tree.predict(person)[0]}")
-        elif decision_tree is None: 
-            print(f"Prédiction de la cible pour la personne : {regression.predict(person)[0]}")
-        else:
-            print(f"Prédiction de la cible pour la personne : {regression.predict(person)[0]}, {decision_tree.predict(person)[0]}")
-    ```
+```python
+def predire_cible(person, regression=None, decision_tree=None):
+    """
+    Prédiction de la cible pour une personne
+    Input : 
+        - person, les données de la personne
+        - regression, l'objet de régression linéaire,
+        - decision_tree, l'objet de l'arbre de décision
+    Output : 
+        - la prédiction de la cible pour la personne
+    """
+    if regression is None and decision_tree is None:
+        print("Erreur : regression et decision_tree ne peuvent pas être tous les deux nuls")
+    elif regression is None:
+        print(f"Prédiction de la cible pour la personne : {decision_tree.predict(person)[0]}")
+    elif decision_tree is None: 
+        print(f"Prédiction de la cible pour la personne : {regression.predict(person)[0]}")
+    else:
+        print(f"Prédiction de la cible pour la personne : {regression.predict(person)[0]}, {decision_tree.predict(person)[0]}")
+```
 
-    - Soit la personne suivante :
+- Soit la personne suivante :
 
-    ```python
-    person = pd.DataFrame({
-        'age':22,
-        'sex':0,
-        'cp':0,
-        'trestbps':140,
-        'chol':200,
-        'fbs':1,
-        'restecg':0,
-        'thalachh':200,
-        'exang':0,
-        'oldpeak':0,
-        'slope':1,
-        'ca':2,
-        'thal':1
-    }, index=[0])
-    ```
+```python
+person = pd.DataFrame({
+    'age':22,
+    'sex':0,
+    'cp':0,
+    'trestbps':140,
+    'chol':200,
+    'fbs':1,
+    'restecg':0,
+    'thalachh':200,
+    'exang':0,
+    'oldpeak':0,
+    'slope':1,
+    'ca':2,
+    'thal':1
+}, index=[0])
+```
 
-    - On obtient la prédiction suivante : 
+- On obtient la prédiction suivante : 
 
-    ```
-    Prédiction de la cible pour la personne : 0.5826130070328832, 0
-    ```
+```
+Prédiction de la cible pour la personne : 0.5826130070328832, 0
+```
 
-    Selon le modèle regressif, la personne a 58% de chance d'avoir une attaque cardiaque. Selon l'arbre de décision, la personne n'a pas de risque d'attaque cardiaque.
-    Ici les deux modèles ne sont pas d'accord car les valeurs des caractéristiques de la personne ont été choisies exprès, mais en général, les deux modèles donnent le même résultat.
+Selon le modèle regressif, la personne a 58% de chance d'avoir une attaque cardiaque. Selon l'arbre de décision, la personne n'a pas de risque d'attaque cardiaque.
+Ici les deux modèles ne sont pas d'accord car les valeurs des caractéristiques de la personne ont été choisies exprès, mais en général, les deux modèles donnent le même résultat.
 
 ### 3. Comparaison des prédictions avec la réalité
 
-    - On a utilisé la fonction suivante pour comparer les prédictions avec la réalité : 
+- On a utilisé la fonction suivante pour comparer les prédictions avec la réalité : 
 
-    ```python
-    def graph_prediction_pour_chaque_cle(keys, regression, df):
-        """
-        Comparaison des prédictions et de la réalité pour chaque clé
-        Input : 
-            - keys, les clés à comparer
-            - regression, l'objet de régression linéaire,
-            - df, le dataframe contenant les données
-        """
-        # Fonction pour générer un subplot pour chaque clé
-        def comparer_predictions_realité(key):
-            grouped = df.groupby(key).mean()
-            plt.plot(grouped.index, grouped['target'])
+```python
+def graph_prediction_pour_chaque_cle(keys, regression, df):
+    """
+    Comparaison des prédictions et de la réalité pour chaque clé
+    Input : 
+        - keys, les clés à comparer
+        - regression, l'objet de régression linéaire,
+        - df, le dataframe contenant les données
+    """
+    # Fonction pour générer un subplot pour chaque clé
+    def comparer_predictions_realité(key):
+        grouped = df.groupby(key).mean()
+        plt.plot(grouped.index, grouped['target'])
 
-            # Création d'un dataframe avec toutes les valeurs prédites pour chaque valeur de la clé
-            df_predictions = get_prediction_dataframe(df, regression)
-            grouped_predictions = df_predictions.groupby(key).mean()
-            plt.plot(grouped_predictions.index, grouped_predictions['prediction'])  
-            plt.ylabel(f'target/{key}')
+        # Création d'un dataframe avec toutes les valeurs prédites pour chaque valeur de la clé
+        df_predictions = get_prediction_dataframe(df, regression)
+        grouped_predictions = df_predictions.groupby(key).mean()
+        plt.plot(grouped_predictions.index, grouped_predictions['prediction'])  
+        plt.ylabel(f'target/{key}')
 
-        # Affichage du graphique
-        plt.figure(figsize=(20, 20))
-        for i, key in enumerate(keys):
-            plt.subplot(4, 4, i+1)
-            comparer_predictions_realité(key)
-        plt.legend(['Réel', 'Prédiction'])
-        plt.show()
-    ```
+    # Affichage du graphique
+    plt.figure(figsize=(20, 20))
+    for i, key in enumerate(keys):
+        plt.subplot(4, 4, i+1)
+        comparer_predictions_realité(key)
+    plt.legend(['Réel', 'Prédiction'])
+    plt.show()
+```
 
-    - On obtient les graphiques suivants :
+- On obtient les graphiques suivants :
 
-    ![Graphique comparaison](plots/graphs_comparaisons.png)
+![Graphique comparaison](plots/graphs_comparaisons.png)
 
-    On remarque que les prédictions sont assez proches de la réalité mais pour les variables "binaires" (comme `sex` ou `fbs`), les prédictions sont exactements les mêmes que la réalité, ce qui est normal mais ne donne aucune information.
+On remarque que les prédictions sont assez proches de la réalité mais pour les variables "binaires" (comme `sex` ou `fbs`), les prédictions sont exactements les mêmes que la réalité, ce qui est normal mais ne donne aucune information.
 
 ---
 

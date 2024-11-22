@@ -139,37 +139,35 @@ L'entropie conditionnelle est calculée avec <span class="katex"><span class="ka
 <h2 id="modèles-prédictifs">Modèles prédictifs </h2>
 <p>Pour prédire la variable cible <code>target</code>, on a utilisé un modèle regressif (et un arbre de décision) :</p>
 <h3 id="1-calcul-des-coefficients-">1. Calcul des coefficients : </h3>
-<pre class="language-text">- On a utilisé un modèle de régression pour prédire la variable cible `target` en fonction des autres variables.
-- On a utilisé la fonction suivante pour générer le modèle : 
-
-```python
-def calcul_coefficients(df):
-    """
+<ul>
+<li>On a utilisé un modèle de régression pour prédire la variable cible <code>target</code> en fonction des autres variables.</li>
+<li>On a utilisé la fonction suivante pour générer le modèle :</li>
+</ul>
+<pre data-role="codeBlock" data-info="python" class="language-python python"><code><span class="token keyword keyword-def">def</span> <span class="token function">calcul_coefficients</span><span class="token punctuation">(</span>df<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token triple-quoted-string string">"""
     Calcul des coefficients de la régression linéaire et de l'arbre de décision pour prédire la cible
     Input : 
         - df, le dataframe contenant les données
     Output : 
         - regression, l'objet de régression linéaire,
         - decision_tree, l'objet de l'arbre de décision
-    """
-    # Séparation des variables et de la cible
-    variables, results = serparer_variables_cible(df)
+    """</span>
+    <span class="token comment"># Séparation des variables et de la cible</span>
+    variables<span class="token punctuation">,</span> results <span class="token operator">=</span> serparer_variables_cible<span class="token punctuation">(</span>df<span class="token punctuation">)</span>
 
-    # Régression linéaire
-    regression = linear_model.LinearRegression()
-    regression.fit(variables, results)
+    <span class="token comment"># Régression linéaire</span>
+    regression <span class="token operator">=</span> linear_model<span class="token punctuation">.</span>LinearRegression<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    regression<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>variables<span class="token punctuation">,</span> results<span class="token punctuation">)</span>
 
-    # Arbre de décision
-    decision_tree = tree.DecisionTreeClassifier()
-    decision_tree.fit(variables, results)
+    <span class="token comment"># Arbre de décision</span>
+    decision_tree <span class="token operator">=</span> tree<span class="token punctuation">.</span>DecisionTreeClassifier<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    decision_tree<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>variables<span class="token punctuation">,</span> results<span class="token punctuation">)</span>
 
-    return regression, decision_tree
-```
-
-- On obtient les coefficients suivants :
-
-```
-    variable  coefficient
+    <span class="token keyword keyword-return">return</span> regression<span class="token punctuation">,</span> decision_tree
+</code></pre><ul>
+<li>On obtient les coefficients suivants :</li>
+</ul>
+<pre data-role="codeBlock" data-info="" class="language-text"><code>    variable  coefficient
 0        age    -0.001046
 1        sex    -0.146262
 2         cp     0.091528
@@ -183,16 +181,15 @@ def calcul_coefficients(df):
 10     slope     0.172099
 11        ca    -0.075477
 12      thal    -0.042790
-```
-
-- On obtient également un arbre de décision qui permet de prédire la variable cible
-</pre>
+</code></pre><ul>
+<li>On obtient également un arbre de décision qui permet de prédire la variable cible</li>
+</ul>
 <h3 id="2-prédiction-de-la-variable-cible-pour-une-personne">2. Prédiction de la variable cible pour une personne </h3>
-<pre class="language-text">- On a utilisé la fonction suivante pour prédire la variable cible pour une personne donnée : 
-
-```python
-def predire_cible(person, regression=None, decision_tree=None):
-    """
+<ul>
+<li>On a utilisé la fonction suivante pour prédire la variable cible pour une personne donnée :</li>
+</ul>
+<pre data-role="codeBlock" data-info="python" class="language-python python"><code><span class="token keyword keyword-def">def</span> <span class="token function">predire_cible</span><span class="token punctuation">(</span>person<span class="token punctuation">,</span> regression<span class="token operator">=</span><span class="token boolean">None</span><span class="token punctuation">,</span> decision_tree<span class="token operator">=</span><span class="token boolean">None</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token triple-quoted-string string">"""
     Prédiction de la cible pour une personne
     Input : 
         - person, les données de la personne
@@ -200,84 +197,74 @@ def predire_cible(person, regression=None, decision_tree=None):
         - decision_tree, l'objet de l'arbre de décision
     Output : 
         - la prédiction de la cible pour la personne
-    """
-    if regression is None and decision_tree is None:
-        print("Erreur : regression et decision_tree ne peuvent pas être tous les deux nuls")
-    elif regression is None:
-        print(f"Prédiction de la cible pour la personne : {decision_tree.predict(person)[0]}")
-    elif decision_tree is None: 
-        print(f"Prédiction de la cible pour la personne : {regression.predict(person)[0]}")
-    else:
-        print(f"Prédiction de la cible pour la personne : {regression.predict(person)[0]}, {decision_tree.predict(person)[0]}")
-```
-
-- Soit la personne suivante :
-
-```python
-person = pd.DataFrame({
-    'age':22,
-    'sex':0,
-    'cp':0,
-    'trestbps':140,
-    'chol':200,
-    'fbs':1,
-    'restecg':0,
-    'thalachh':200,
-    'exang':0,
-    'oldpeak':0,
-    'slope':1,
-    'ca':2,
-    'thal':1
-}, index=[0])
-```
-
-- On obtient la prédiction suivante : 
-
-```
-Prédiction de la cible pour la personne : 0.5826130070328832, 0
-```
-
-Selon le modèle regressif, la personne a 58% de chance d'avoir une attaque cardiaque. Selon l'arbre de décision, la personne n'a pas de risque d'attaque cardiaque.
-Ici les deux modèles ne sont pas d'accord car les valeurs des caractéristiques de la personne ont été choisies exprès, mais en général, les deux modèles donnent le même résultat.
-</pre>
+    """</span>
+    <span class="token keyword keyword-if">if</span> regression <span class="token keyword keyword-is">is</span> <span class="token boolean">None</span> <span class="token keyword keyword-and">and</span> decision_tree <span class="token keyword keyword-is">is</span> <span class="token boolean">None</span><span class="token punctuation">:</span>
+        <span class="token keyword keyword-print">print</span><span class="token punctuation">(</span><span class="token string">"Erreur : regression et decision_tree ne peuvent pas être tous les deux nuls"</span><span class="token punctuation">)</span>
+    <span class="token keyword keyword-elif">elif</span> regression <span class="token keyword keyword-is">is</span> <span class="token boolean">None</span><span class="token punctuation">:</span>
+        <span class="token keyword keyword-print">print</span><span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"Prédiction de la cible pour la personne : </span><span class="token interpolation"><span class="token punctuation">{</span>decision_tree<span class="token punctuation">.</span>predict<span class="token punctuation">(</span>person<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">}</span></span><span class="token string">"</span></span><span class="token punctuation">)</span>
+    <span class="token keyword keyword-elif">elif</span> decision_tree <span class="token keyword keyword-is">is</span> <span class="token boolean">None</span><span class="token punctuation">:</span> 
+        <span class="token keyword keyword-print">print</span><span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"Prédiction de la cible pour la personne : </span><span class="token interpolation"><span class="token punctuation">{</span>regression<span class="token punctuation">.</span>predict<span class="token punctuation">(</span>person<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">}</span></span><span class="token string">"</span></span><span class="token punctuation">)</span>
+    <span class="token keyword keyword-else">else</span><span class="token punctuation">:</span>
+        <span class="token keyword keyword-print">print</span><span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"Prédiction de la cible pour la personne : </span><span class="token interpolation"><span class="token punctuation">{</span>regression<span class="token punctuation">.</span>predict<span class="token punctuation">(</span>person<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">}</span></span><span class="token string">, </span><span class="token interpolation"><span class="token punctuation">{</span>decision_tree<span class="token punctuation">.</span>predict<span class="token punctuation">(</span>person<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">}</span></span><span class="token string">"</span></span><span class="token punctuation">)</span>
+</code></pre><ul>
+<li>Soit la personne suivante :</li>
+</ul>
+<pre data-role="codeBlock" data-info="python" class="language-python python"><code>person <span class="token operator">=</span> pd<span class="token punctuation">.</span>DataFrame<span class="token punctuation">(</span><span class="token punctuation">{</span>
+    <span class="token string">'age'</span><span class="token punctuation">:</span><span class="token number">22</span><span class="token punctuation">,</span>
+    <span class="token string">'sex'</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">,</span>
+    <span class="token string">'cp'</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">,</span>
+    <span class="token string">'trestbps'</span><span class="token punctuation">:</span><span class="token number">140</span><span class="token punctuation">,</span>
+    <span class="token string">'chol'</span><span class="token punctuation">:</span><span class="token number">200</span><span class="token punctuation">,</span>
+    <span class="token string">'fbs'</span><span class="token punctuation">:</span><span class="token number">1</span><span class="token punctuation">,</span>
+    <span class="token string">'restecg'</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">,</span>
+    <span class="token string">'thalachh'</span><span class="token punctuation">:</span><span class="token number">200</span><span class="token punctuation">,</span>
+    <span class="token string">'exang'</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">,</span>
+    <span class="token string">'oldpeak'</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">,</span>
+    <span class="token string">'slope'</span><span class="token punctuation">:</span><span class="token number">1</span><span class="token punctuation">,</span>
+    <span class="token string">'ca'</span><span class="token punctuation">:</span><span class="token number">2</span><span class="token punctuation">,</span>
+    <span class="token string">'thal'</span><span class="token punctuation">:</span><span class="token number">1</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span> index<span class="token operator">=</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+</code></pre><ul>
+<li>On obtient la prédiction suivante :</li>
+</ul>
+<pre data-role="codeBlock" data-info="" class="language-text"><code>Prédiction de la cible pour la personne : 0.5826130070328832, 0
+</code></pre><p>Selon le modèle regressif, la personne a 58% de chance d'avoir une attaque cardiaque. Selon l'arbre de décision, la personne n'a pas de risque d'attaque cardiaque.<br>
+Ici les deux modèles ne sont pas d'accord car les valeurs des caractéristiques de la personne ont été choisies exprès, mais en général, les deux modèles donnent le même résultat.</p>
 <h3 id="3-comparaison-des-prédictions-avec-la-réalité">3. Comparaison des prédictions avec la réalité </h3>
-<pre class="language-text">- On a utilisé la fonction suivante pour comparer les prédictions avec la réalité : 
-
-```python
-def graph_prediction_pour_chaque_cle(keys, regression, df):
-    """
+<ul>
+<li>On a utilisé la fonction suivante pour comparer les prédictions avec la réalité :</li>
+</ul>
+<pre data-role="codeBlock" data-info="python" class="language-python python"><code><span class="token keyword keyword-def">def</span> <span class="token function">graph_prediction_pour_chaque_cle</span><span class="token punctuation">(</span>keys<span class="token punctuation">,</span> regression<span class="token punctuation">,</span> df<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token triple-quoted-string string">"""
     Comparaison des prédictions et de la réalité pour chaque clé
     Input : 
         - keys, les clés à comparer
         - regression, l'objet de régression linéaire,
         - df, le dataframe contenant les données
-    """
-    # Fonction pour générer un subplot pour chaque clé
-    def comparer_predictions_realité(key):
-        grouped = df.groupby(key).mean()
-        plt.plot(grouped.index, grouped['target'])
+    """</span>
+    <span class="token comment"># Fonction pour générer un subplot pour chaque clé</span>
+    <span class="token keyword keyword-def">def</span> comparer_predictions_realité<span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        grouped <span class="token operator">=</span> df<span class="token punctuation">.</span>groupby<span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">.</span>mean<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        plt<span class="token punctuation">.</span>plot<span class="token punctuation">(</span>grouped<span class="token punctuation">.</span>index<span class="token punctuation">,</span> grouped<span class="token punctuation">[</span><span class="token string">'target'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
 
-        # Création d'un dataframe avec toutes les valeurs prédites pour chaque valeur de la clé
-        df_predictions = get_prediction_dataframe(df, regression)
-        grouped_predictions = df_predictions.groupby(key).mean()
-        plt.plot(grouped_predictions.index, grouped_predictions['prediction'])  
-        plt.ylabel(f'target/{key}')
+        <span class="token comment"># Création d'un dataframe avec toutes les valeurs prédites pour chaque valeur de la clé</span>
+        df_predictions <span class="token operator">=</span> get_prediction_dataframe<span class="token punctuation">(</span>df<span class="token punctuation">,</span> regression<span class="token punctuation">)</span>
+        grouped_predictions <span class="token operator">=</span> df_predictions<span class="token punctuation">.</span>groupby<span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">.</span>mean<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        plt<span class="token punctuation">.</span>plot<span class="token punctuation">(</span>grouped_predictions<span class="token punctuation">.</span>index<span class="token punctuation">,</span> grouped_predictions<span class="token punctuation">[</span><span class="token string">'prediction'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>  
+        plt<span class="token punctuation">.</span>ylabel<span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f'target/</span><span class="token interpolation"><span class="token punctuation">{</span>key<span class="token punctuation">}</span></span><span class="token string">'</span></span><span class="token punctuation">)</span>
 
-    # Affichage du graphique
-    plt.figure(figsize=(20, 20))
-    for i, key in enumerate(keys):
-        plt.subplot(4, 4, i+1)
-        comparer_predictions_realité(key)
-    plt.legend(['Réel', 'Prédiction'])
-    plt.show()
-```
-
-- On obtient les graphiques suivants :
-
-![Graphique comparaison](plots/graphs_comparaisons.png)
-
-On remarque que les prédictions sont assez proches de la réalité mais pour les variables "binaires" (comme `sex` ou `fbs`), les prédictions sont exactements les mêmes que la réalité, ce qui est normal mais ne donne aucune information.
-</pre>
+    <span class="token comment"># Affichage du graphique</span>
+    plt<span class="token punctuation">.</span>figure<span class="token punctuation">(</span>figsize<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">,</span> <span class="token number">20</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword keyword-for">for</span> i<span class="token punctuation">,</span> key <span class="token keyword keyword-in">in</span> <span class="token builtin">enumerate</span><span class="token punctuation">(</span>keys<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        plt<span class="token punctuation">.</span>subplot<span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> i<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span>
+        comparer_predictions_realité<span class="token punctuation">(</span>key<span class="token punctuation">)</span>
+    plt<span class="token punctuation">.</span>legend<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'Réel'</span><span class="token punctuation">,</span> <span class="token string">'Prédiction'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    plt<span class="token punctuation">.</span>show<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre><ul>
+<li>On obtient les graphiques suivants :</li>
+</ul>
+<p><img src="plots/graphs_comparaisons.png" alt="Graphique comparaison"></p>
+<p>On remarque que les prédictions sont assez proches de la réalité mais pour les variables "binaires" (comme <code>sex</code> ou <code>fbs</code>), les prédictions sont exactements les mêmes que la réalité, ce qui est normal mais ne donne aucune information.</p>
 <hr>
 <h2 id="critique-du-dataset">Critique du dataset </h2>
 <ul>
