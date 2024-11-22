@@ -80,3 +80,12 @@ Plus la correlation est élevée <u>en valeur absolue</u>, plus la variable est 
 ---
 
 
+## Entropies
+
+### Entropie
+
+![Entropie](plots/entropie.png)
+### Entropie Conditionnelle
+![Entropie Conditionnelle](plots/entropie_conditionnelle.png)
+### Entropie croisée
+![Entropie Croisée](plots/entropie_croisee.png)
