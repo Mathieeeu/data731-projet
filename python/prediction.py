@@ -158,7 +158,7 @@ if __name__ == "__main__":
         'oldpeak':0,
         'slope':1,
         'ca':2,
-        'thal':1
+        'thal':1    
     }, index=[0])
     predire_cible(person, regression, decision_tree)
 

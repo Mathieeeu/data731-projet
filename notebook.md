@@ -115,11 +115,30 @@ Plus la correlation est élevée <u>en valeur absolue</u>, plus la variable est 
 
 ---
 
+## Entropies
+
+### Entropie
+
+**Définition** : Une entropie est une mesure de l'incertitude d'une variable aléatoire. Plus l'entropie est élevée pour un attribut, plus il y a de diversité dans la colonne, ce qui indique qu'elle couvre une large gamme de catégories. Une entropie faible, au contraire, montre que la colonne est plus homogène (dominée par une ou deux catégories).
+L'entropie epsilon est calculée avec $H(X) = - \sum_{i=1}^{n} p(x_i) \log p(x_i)$ où $p(x_i)$ est la probabilité de la valeur $x_i$ dans la colonne.
+
+![Entropie](plots/entropie.png)
+
+### Entropie Conditionnelle
+
+**Définition** : L'entropie conditionnelle est une mesure de l'incertitude d'une variable aléatoire, <u>sachant une autre variable aléatoire</u>. Elle est utilisée pour mesurer la quantité d'information nécessaire pour décrire la sortie d'un système, sachant l'entrée.
+Plus l'entropie conditionnelle d'une variable est élevée, plus il faut apporter d'informations supplémentaire pour prédire la variable cible. Plus elle est faible, plus la variable est importante pour prédire la variable cible.
+L'entropie conditionnelle est calculée avec $H(Y|X) = - \sum_{i=1}^{n} p(x_i) \sum_{j=1}^{m} p(y_j|x_i) \log p(y_j|x_i)$ où $p(y_j|x_i)$ est la probabilité de la valeur $y_j$ sachant la valeur $x_i$ dans la colonne.
+
+![Entropie Conditionnelle](plots/entropie_conditionnelle.png)
+
+---
+
 ## Modèles prédictifs
 
 Pour prédire la variable cible `target`, on a utilisé un modèle regressif (et un arbre de décision) :
 
-1. **Calcul des coefficients** :
+### 1. Calcul des coefficients :
     - On a utilisé un modèle de régression pour prédire la variable cible `target` en fonction des autres variables.
     - On a utilisé la fonction suivante pour générer le modèle : 
 
@@ -168,7 +187,7 @@ Pour prédire la variable cible `target`, on a utilisé un modèle regressif (et
 
     - On obtient également un arbre de décision qui permet de prédire la variable cible
 
-2. **Prédiction de la variable cible pour une personne**
+### 2. Prédiction de la variable cible pour une personne
 
     - On a utilisé la fonction suivante pour prédire la variable cible pour une personne donnée : 
 
@@ -220,8 +239,9 @@ Pour prédire la variable cible `target`, on a utilisé un modèle regressif (et
     ```
 
     Selon le modèle regressif, la personne a 58% de chance d'avoir une attaque cardiaque. Selon l'arbre de décision, la personne n'a pas de risque d'attaque cardiaque.
+    Ici les deux modèles ne sont pas d'accord car les valeurs des caractéristiques de la personne ont été choisies exprès, mais en général, les deux modèles donnent le même résultat.
 
-3. **Comparaison des prédictions avec la réalité**
+### 3. Comparaison des prédictions avec la réalité
 
     - On a utilisé la fonction suivante pour comparer les prédictions avec la réalité : 
 
@@ -266,7 +286,7 @@ Pour prédire la variable cible `target`, on a utilisé un modèle regressif (et
 
 - **Points positifs** : 
     - Les données sont assez complètes et permettent de prédire la variable cible avec une bonne précision.
-    - Les données sont assez propres et ne nécessitent pas de nettoyage particulier.
+    - Les données sont propres et ne nécessitent pas de nettoyage particulier.
 
 - **Points négatifs** :
     - Les données ne sont pas fiables.
@@ -274,16 +294,3 @@ Pour prédire la variable cible `target`, on a utilisé un modèle regressif (et
     La raison derrière cela est que les personnes plus jeunes ne se font tester que si elles ont des symptomes, alors que les personnes plus agées se font tester régulièrement.
     Il y a donc un plus grand pourcentage de tests négatifs chez les personnes plus agées que chez les personnes plus jeunes. 
     C'est pour cette raison que la correlation entre l'age et le risque cardiaque est négative dans la matrice de correlation, alors que dans la réalité, c'est censé être assez correlé.
-
-
-
-
-## Entropies
-
-### Entropie
-
-![Entropie](plots/entropie.png)
-### Entropie Conditionnelle
-![Entropie Conditionnelle](plots/entropie_conditionnelle.png)
-### Entropie croisée
-![Entropie Croisée](plots/entropie_croisee.png)
