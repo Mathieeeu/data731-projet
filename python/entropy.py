@@ -1,25 +1,22 @@
 import numpy as np
-from math import e
 import pandas as pd   
-from scipy.stats import entropy
 import matplotlib.pyplot as plt
 
 #Calcul entropy avec une librairie
 #value, count = np.unique(column, return_counts=True) 
 #print(entropy(count, base=2))
 
-def entropie(data, base=None):
+def entropie(data):
     vc = pd.Series(data).value_counts(normalize=True, sort=False)
-    base = e if base is None else base 
-    return -(vc * np.log(vc)/np.log(base)).sum()
+    return -(vc * np.log(vc)).sum()
 
-def entropie_totale(data, base=None):
+def entropie_totale(data):
     """Entropie élevée : Beaucoup de diversité dans une colonne, indiquant qu'elle couvre une large gamme de catégories.
         Entropie faible : La colonne est dominée par une ou deux catégories.
     """
     dic_entropie ={}
     for feature in (data.columns.tolist()):
-        dic_entropie[feature] = entropie(data[feature],base)
+        dic_entropie[feature] = entropie(data[feature])
     dict_sorted = dict(sorted(dic_entropie.items(), key=lambda item: item[1]))
    
     #Graphique
@@ -48,11 +45,11 @@ def entropie_conditionnelle(data, target):
         if feature == target:
             continue
         total_entropie = 0
-        for _,partie in df.groupby(feature):
+        for _,partie in data.groupby(feature):
             #calcul de la probabilité de chaque valeur sur le dataset
-            prob_valeur = len(partie) / len(df)
+            prob_valeur = len(partie) / len(data)
             target_probs = partie[target].value_counts(normalize=True)
-            entropie_partie = -(target_probs * np.log2(target_probs)).sum()
+            entropie_partie = -(target_probs * np.log(target_probs)).sum()
             #Pondération
             total_entropie += prob_valeur * entropie_partie
             dic_entropie[feature] = total_entropie
@@ -66,32 +63,34 @@ def entropie_conditionnelle(data, target):
     plt.ylabel('Paramètres')
     plt.title('Entropie Conditionnelle')
     plt.grid(axis='x', linestyle='--', alpha=0.7)
-    plt.xlim((0.7,1.001))
+    plt.xlim((0.5,0.7))
     plt.tight_layout()
     plt.show()
     
     return dict_sorted
 
-def entropie_croisee(X, Y):
+
+def entropie_croisee(data,column, target):
+    """
+    Mesure à quel point une distribution X est bonne pour représenter une autre distribution Y
+    Notion de qualité
+    Plus l'entropie est faible plus Y est proche de X
+    """
     total_entropie = 0
-    crosstab = pd.crosstab(X, Y, normalize='index')
-    for _, row in crosstab.iterrows():
-        entropie = -(row * np.log(row + 1e-9)).sum()
-    # for _, partie in data.groupby(feature):
-    #     X = partie[feature].value_counts(normalize=True, sort=False)
-    #     Y = partie[target].value_counts(normalize=True, sort=False)
-    #     entropie = -(X * np.log(Y + 1e-9)).sum()  # Ajout d'une petite valeur pour éviter log(0)
-        total_entropie += entropie
-        
-    return total_entropie
+    # Distribution conditionnelle P(x | target)
+    distribution = pd.crosstab(data[column], data[target], normalize='columns')
+    distribution_target = data[target].value_counts(normalize=True)
+    # Calcul de l'entropie croisée
+    entropie_croisee = -(distribution * np.log(distribution + 1e-9)).sum(axis=0)
+    total_entropie = np.dot(entropie_croisee, distribution_target.values)
+    return total_entropie.sum()
 
 def entropie_croisee_totale(data, target):
     dic_entropie = {}
-    for feature in data.columns.tolist():
+    for feature in data.columns:
         if feature == target:
             continue
-        total_entropie = entropie_croisee(data[feature],data[target])
-        dic_entropie[feature] = total_entropie
+        dic_entropie[feature] = entropie_croisee(data,feature,target)
      
     dict_sorted = dict(sorted(dic_entropie.items(), key=lambda item: item[1]))
        
@@ -112,8 +111,9 @@ def entropie_relative(data,feature,target):
     """
     Mesure à quel point une distribution X s'écarte d'une distribution de référence Y
     E(X,Y)-E(X)
+    Notion d'écart
     """
-    entropie_relative = entropie_croisee(data[feature],data[target]) - entropie(data[feature],2)
+    entropie_relative = entropie_croisee(data, feature, target) - entropie(data[feature])
     
     # X = data[feature].value_counts(normalize=True, sort=False)
     # Y = reference_distribution.value_counts(normalize=True, sort=False)
@@ -128,14 +128,13 @@ def entropie_relative(data,feature,target):
     return entropie_relative
 
 def entropie_relative_totale(data, target):
-    dic_entropie = {}
+    dict_entropie = {}
     for feature in data.columns.tolist():
         if feature == target:
             continue
-        total_entropie = entropie_relative(data,feature,target)
-        dic_entropie[feature] = total_entropie
+        dict_entropie[feature] = entropie_relative(data,feature,target)
         
-    dict_sorted = dict(sorted(dic_entropie.items(), key=lambda item: item[1]))
+    dict_sorted = dict(sorted(dict_entropie.items(), key=lambda item: item[1]))
        
     #Graphique
     colors = plt.cm.viridis(np.linspace(0, 1, len(dict_sorted)))
@@ -148,16 +147,16 @@ def entropie_relative_totale(data, target):
     plt.tight_layout()
     plt.show()
     
-    return dic_entropie
+    return dict_sorted
 
 
 file_name = "cleaned_merged_heart_dataset.csv"
 
 df = pd.read_csv("./data/"+file_name)
 
-#print(entropie_totale(df, base=2))
+print(entropie_totale(df))
 
-#print(entropie_conditionnelle(df,"target"))
+print(entropie_conditionnelle(df,"target"))
 
 print(entropie_croisee_totale(df, "target"))
 
