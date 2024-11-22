@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd   
 import matplotlib.pyplot as plt
-import prediction as pred 
+from prediction import calcul_coefficients
 
 #Calcul entropy avec une librairie
 #value, count = np.unique(column, return_counts=True) 
@@ -111,7 +111,8 @@ def entropie_conditionnelle(data, target):
 def entropie_croisee(data,feature): 
     epsilon = 1e-12 
     X_reel = data[feature]
-    X_pred =  
+    print(calcul_coefficients(data))
+    X_pred =  0
     N = X_reel.shape[0] 
     entropie = -np.sum(X_reel * np.log(X_pred + 1e-9)) / N 
     return entropie
@@ -163,9 +164,9 @@ file_name = "cleaned_merged_heart_dataset.csv"
 
 df = pd.read_csv("./data/"+file_name)
 
-print(entropie_totale(df))
+#print(entropie_totale(df))
 
-print(entropie_conditionnelle(df,"target"))
+#print(entropie_conditionnelle(df,"target"))
 
 print(entropie_croisee_totale(df, "target"))
 
