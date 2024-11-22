@@ -137,35 +137,35 @@ def graph_prediction_pour_chaque_cle(keys, regression, df):
     plt.legend(['Réel', 'Prédiction'])
     plt.show()
 
+if __name__ == "__main__":
+    # Calcul des coefficients de la régression linéaire et de l'arbre de décision
+    regression, decision_tree = calcul_coefficients(df)
 
-# Calcul des coefficients de la régression linéaire et de l'arbre de décision
-regression, decision_tree = calcul_coefficients(df)
+    # Graphique de la prédiction de la cible en fonction de l'index de la ligne
+    graph_precision(regression, df)
 
-# Graphique de la prédiction de la cible en fonction de l'index de la ligne
-graph_precision(regression, df)
+    # Prédiction d'une personne saisie manuellement 
+    person = pd.DataFrame({
+        'age':22,
+        'sex':0,
+        'cp':0,
+        'trestbps':140,
+        'chol':200,
+        'fbs':1,
+        'restecg':0,
+        'thalachh':200,
+        'exang':0,
+        'oldpeak':0,
+        'slope':1,
+        'ca':2,
+        'thal':1
+    }, index=[0])
+    predire_cible(person, regression, decision_tree)
 
-# Prédiction d'une personne saisie manuellement 
-person = pd.DataFrame({
-    'age':22,
-    'sex':0,
-    'cp':0,
-    'trestbps':140,
-    'chol':200,
-    'fbs':1,
-    'restecg':0,
-    'thalachh':200,
-    'exang':0,
-    'oldpeak':0,
-    'slope':1,
-    'ca':2,
-    'thal':1
-}, index=[0])
-predire_cible(person, regression, decision_tree)
+    # Dataframe contenant les prédictions pour chaque entrée du dataframe
+    df_predictions = get_prediction_dataframe(df, regression)
+    print(df_predictions)
 
-# Dataframe contenant les prédictions pour chaque entrée du dataframe
-df_predictions = get_prediction_dataframe(df, regression)
-print(df_predictions)
-
-# Graphique de la prédiction de la cible en fonction de l'index de la ligne
-keys = ['age', 'sex', 'cp', 'trestbps', 'chol', 'fbs', 'restecg', 'thalachh', 'exang', 'oldpeak', 'slope', 'ca', 'thal']
-graph_prediction_pour_chaque_cle(keys, regression, df)
+    # Graphique de la prédiction de la cible en fonction de l'index de la ligne
+    keys = ['age', 'sex', 'cp', 'trestbps', 'chol', 'fbs', 'restecg', 'thalachh', 'exang', 'oldpeak', 'slope', 'ca', 'thal']
+    graph_prediction_pour_chaque_cle(keys, regression, df)
