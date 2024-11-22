@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd   
 import matplotlib.pyplot as plt
+import prediction as pred 
 
 #Calcul entropy avec une librairie
 #value, count = np.unique(column, return_counts=True) 
@@ -70,42 +71,50 @@ def entropie_conditionnelle(data, target):
     return dict_sorted
 
 
-def entropie_croisee(data,column, target):
-    """
-    Mesure à quel point une distribution X est bonne pour représenter une autre distribution Y
-    Notion de qualité
-    Plus l'entropie est faible plus Y est proche de X
-    """
-    total_entropie = 0
-    # Distribution conditionnelle P(x | target)
-    distribution = pd.crosstab(data[column], data[target], normalize='columns')
-    distribution_target = data[target].value_counts(normalize=True)
-    # Calcul de l'entropie croisée
-    entropie_croisee = -(distribution * np.log(distribution + 1e-9)).sum(axis=0)
-    total_entropie = np.dot(entropie_croisee, distribution_target.values)
-    return total_entropie.sum()
+# def entropie_croisee(data,column, target):
+#     """
+#     Mesure à quel point une distribution X est bonne pour représenter une autre distribution Y
+#     Notion de qualité
+#     Plus l'entropie est faible plus Y est proche de X
+#     """
+#     total_entropie = 0
+#     # Distribution conditionnelle P(x | target)
+#     distribution = pd.crosstab(data[column], data[target], normalize='columns')
+#     distribution_target = data[target].value_counts(normalize=True)
+#     # Calcul de l'entropie croisée
+#     entropie_croisee = -(distribution * np.log(distribution + 1e-9)).sum(axis=0)
+#     total_entropie = np.dot(entropie_croisee, distribution_target.values)
+#     return total_entropie.sum()
 
-def entropie_croisee_totale(data, target):
-    dic_entropie = {}
-    for feature in data.columns:
-        if feature == target:
-            continue
-        dic_entropie[feature] = entropie_croisee(data,feature,target)
+# def entropie_croisee_totale(data, target):
+#     dic_entropie = {}
+#     for feature in data.columns:
+#         if feature == target:
+#             continue
+#         dic_entropie[feature] = entropie_croisee(data,feature,target)
      
-    dict_sorted = dict(sorted(dic_entropie.items(), key=lambda item: item[1]))
+#     dict_sorted = dict(sorted(dic_entropie.items(), key=lambda item: item[1]))
        
-    #Graphique
-    colors = plt.cm.viridis(np.linspace(0, 1, len(dict_sorted)))
-    plt.figure(figsize=(10, 7))
-    plt.barh(list(dict_sorted.keys()), list(dict_sorted.values()), color=colors)
-    plt.xlabel("Valeur de l'entropie")
-    plt.ylabel('Paramètres')
-    plt.title('Entropie Croisée')
-    plt.grid(axis='x', linestyle='--', alpha=0.7)
-    plt.tight_layout()
-    plt.show()
+#     #Graphique
+#     colors = plt.cm.viridis(np.linspace(0, 1, len(dict_sorted)))
+#     plt.figure(figsize=(10, 7))
+#     plt.barh(list(dict_sorted.keys()), list(dict_sorted.values()), color=colors)
+#     plt.xlabel("Valeur de l'entropie")
+#     plt.ylabel('Paramètres')
+#     plt.title('Entropie Croisée')
+#     plt.grid(axis='x', linestyle='--', alpha=0.7)
+#     plt.tight_layout()
+#     plt.show()
     
-    return dic_entropie
+#     return dic_entropie
+
+def entropie_croisee(data,feature): 
+    epsilon = 1e-12 
+    X_reel = data[feature]
+    X_pred =  
+    N = X_reel.shape[0] 
+    entropie = -np.sum(X_reel * np.log(X_pred + 1e-9)) / N 
+    return entropie
 
 def entropie_relative(data,feature,target):
     """
@@ -113,7 +122,7 @@ def entropie_relative(data,feature,target):
     E(X,Y)-E(X)
     Notion d'écart
     """
-    entropie_relative = entropie_croisee(data, feature, target) - entropie(data[feature])
+    entropie_relative = entropie_croisee(data, feature) - entropie(data[feature])
     
     # X = data[feature].value_counts(normalize=True, sort=False)
     # Y = reference_distribution.value_counts(normalize=True, sort=False)
