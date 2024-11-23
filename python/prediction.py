@@ -9,7 +9,7 @@ from sklearn import tree
 file_name = "cleaned_merged_heart_dataset.csv"
 df = pd.read_csv("./data/"+file_name)
 
-def serparer_variables_cible(df):
+def separer_variables_cible(df):
     # Séparation des variables et de la cible
     variables = df.drop('target', axis=1)
     results = df['target']
@@ -25,7 +25,7 @@ def calcul_coefficients(df):
         - decision_tree, l'objet de l'arbre de décision
     """
     # Séparation des variables et de la cible
-    variables, results = serparer_variables_cible(df)
+    variables, results = separer_variables_cible(df)
 
     # Régression linéaire
     regression = linear_model.LinearRegression()
@@ -62,7 +62,7 @@ def graph_precision(regression, df, index_min=0, index_max=100):
     """
     
     # Séparation des variables et de la cible
-    variables, results = serparer_variables_cible(df)
+    variables, results = separer_variables_cible(df)
 
     # Graphe de target en fonction de l'index de la ligne (entre les index index_min et index_max)
     plt.plot(range(index_min, index_max), results[index_min:index_max])

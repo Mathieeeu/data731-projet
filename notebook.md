@@ -8,7 +8,7 @@
 
 ## Introduction - Présentation du dataset
 
-Le dataset choisi pour ce projet recense des patients et plusieurs caractéristiques les concerant ainsi que leurs risques d'attaque cardiaque.
+Le dataset choisi pour ce projet recense des patients et plusieurs caractéristiques les concernant ainsi que leurs risques d'attaque cardiaque.
  
  **Explications des différentes caractéristiques**
 
@@ -16,17 +16,17 @@ Le dataset choisi pour ce projet recense des patients et plusieurs caractéristi
 
 2. `sex` :  sexe du patient (_1 = homme et 0 = femme_)
 
-3. `cp` :  de douleur thorasique ressentie par le patient 
- (_Valeurs possible : 0 = angine de pointrine typique, 1 = angine de pointrine atypique, 2 = douleur de pointrine non spécifié , 3 = Asympthomatique_)
+3. `cp` :  de douleur thoracique ressentie par le patient 
+ (_0 = angine de poitrine typique, 1 = angine de poitrine atypique, 2 = douleur de poitrine non spécifiée , 3 = Asymptomatique_)
  L'**angine de poitrine**, ou **angor**, désigne une douleur thoracique qui apparaît généralement pendant un effort ou un stress.
 
-4. `ntrestbps`: pression sangine (_en mmHg_)
+4. `ntrestbps`: pression sanguine (_en mmHg_)
 
-5. `chol`: niveau de choléstérol (_en mg/dl_)
+5. `chol`: niveau de cholestérol (_en mg/dl_)
 
-6. `fbs` : taux de sucre a jeun, il doit etre en dessous de 120mg/dl (_1 = Vrai, 0 = Faux_)
+6. `fbs` : taux de sucre à jeun, il doit être en dessous de 120mg/dl (_1 = Vrai, 0 = Faux_)
 
-7. `restecg` : résultat des électrocardigrammes au repos (_0 = Normale, 1 = anomalie du segement ST-T, 2 = hypertrophie du ventriculaire gauche_)
+7. `restecg` : résultat des électrocardiogrammes au repos (_0 = Normale, 1 = anomalie du segment ST-T, 2 = hypertrophie du ventricule gauche_)
 
 8. `thalach` :  fréquence cardiaque maximum atteinte (_en bpm_)
 
@@ -34,7 +34,7 @@ Le dataset choisi pour ce projet recense des patients et plusieurs caractéristi
 
 10. `oldpeak` :  baisse du segment ST induit par l'effort par rapport au repos
 
-11. `slope` :  pointe du segement ST en execice _(0 = ascendante, 1 = plate, 2 = decendante_)
+11. `slope` :  pointe du segment ST en exercice _(0 = ascendante, 1 = plate, 2 = descendante_)
 
 12. `ca` : nombre d'artères majeures colorées par fluoroscopie(_0, 1, 2, 3_)
 
@@ -68,7 +68,7 @@ def repartitionParCaractere(data1, data2, feature, nb_barres):
         color=['lightgreen','teal'],
         edgecolor='black', 
         density=True, 
-        label=["Risque élevé", "Rsique faible"]
+        label=["Risque élevé", "Risque faible"]
     )
     plt.legend(prop={'size': 10})
     plt.title(f"Répartition du nombre de personnes à risque selon {feature}")
@@ -78,10 +78,10 @@ def repartitionParCaractere(data1, data2, feature, nb_barres):
 On obtient les histogrammes suivants (ici uniquement pour les variables `age`, `sex` et `ca`) :
 
 ![Histogramme Age](plots/histogramme_age.png) 
-On peut déjà faire quelques supositions quand au lien entre l'âge et le risque d'attaque cardiaque. On observe entre autre que le nombre de patient à risque est plus élevé chez ceux agés de moins de 55 ans tandis que le nombre de patients avec un risque faible est très élévé après 55 ans.
+On peut déjà faire quelques suppositions quant au lien entre l'âge et le risque d'attaque cardiaque. On observe entre autre que le nombre de patient à risque est plus élevé chez ceux âgés de moins de 55 ans tandis que le nombre de patients avec un risque faible est très élevé après 55 ans.
 
 ![Histogramme Sexe](plots/histogramme_sex.png)
-A gauche, nous avons les chiffres pour les femmes (représentées par un 0 dans le dataset) et à gauche les hommes (représentés par un 1). On peut voir que le nombre d'homme testé est plus important que celui des femmes.
+A gauche, nous avons les chiffres pour les femmes (représentées par un 0 dans le dataset) et à gauche les hommes (représentés par un 1). On peut voir que le nombre d'hommes testé est plus important que celui des femmes.
 
 ![Histogramme CA](plots/histogramme_ca.png)
 Dans ce cas, on peut supposer que plus on a d'artères colorées par fluoroscopie moins on a de risque de faire une attaque cardiaque.
@@ -99,7 +99,7 @@ Chaque cellule de la matrice contient un coefficient qui varie entre -1 et 1. Pl
 
 La valeur de la cellule (i, j) est égale à $r_{i,j} = \bold{\frac{cov(X_i, X_j)}{\sigma_{X_i} \sigma_{X_j}}}$ où $cov(X_i, X_j)$ est la covariance entre les variables $X_i$ et $X_j$ et $\sigma_{X_i}$ et $\sigma_{X_j}$ sont les écarts-types de $X_i$ et $X_j$.
 
-Pour générer la matrice de correlation, on utilise la fonction suivante : 
+Pour générer la matrice de corrélation, on utilise la fonction suivante : 
 
 ```python
 def matriceCorrelation(data):
@@ -108,7 +108,7 @@ def matriceCorrelation(data):
     
     plt.figure(figsize=(12, 8))
     sns.heatmap(df_corr,annot=True, cmap="magma")
-    plt.title("Matrice de corréralation")
+    plt.title("Matrice de corrélation")
     plt.show()
 ```
 
@@ -129,11 +129,11 @@ Plus la correlation est élevée <u>en valeur absolue</u>, plus la variable est 
 ### Entropie
 
 **Définition** : Une entropie est une mesure de l'incertitude d'une variable aléatoire. Plus l'entropie est élevée pour un attribut, plus il y a de diversité dans la colonne, ce qui indique qu'elle couvre une large gamme de catégories. Une entropie faible, au contraire, montre que la colonne est plus homogène (dominée par une ou deux catégories).
-L'entropie epsilon est calculée avec $H(X) = - \sum_{i=1}^{n} p(x_i) \log p(x_i)$ où $p(x_i)$ est la probabilité de la valeur $x_i$ dans la colonne.
+L'entropie d'une variable est calculée avec $H(X) = - \sum_{i=1}^{n} p(x_i) \log p(x_i)$ où $p(x_i)$ est la probabilité de la valeur $x_i$ dans la colonne.
 
 ![Entropie](plots/entropie.png)
 
-On voit que toutes les caractéristiques discètes telles que l'âge ou la douleur thoracique ont une faible entropie tandis que les caractérisques continues ont une entropie beaucoup plus importante.
+On voit que toutes les caractéristiques discrètes telles que l'âge ou la douleur thoracique ont une faible entropie tandis que les caractéristiques continues ont une entropie beaucoup plus importante.
 
 ### Entropie Conditionnelle
 
@@ -143,7 +143,7 @@ L'entropie conditionnelle est calculée avec $H(Y|X) = - \sum_{i=1}^{n} p(x_i) \
 
 ![Entropie Conditionnelle](plots/entropie_conditionnelle.png)
 
-Ici nous pouvons voir que le cholestérol (`chol`) est un très bon indicateur pour prédire le risque d'une attaque cardiaque chez une personne. Avec une plage de valeurs continues, il est possible d'enregistrer les personnes ayant un taux de cholestérol très élevé et donc de bien identifier le seuil critique tandis que le taux de sucre dans le sang à jeun (`fbs`) n'apporte pas assez d'indication. Cela s'explique par les valeurs qu'il peut prendre dans le data set (0 ou 1) qui nous permettent seulement de savoir si la personne a un taux supérieur à un seuil et non son taux précis. En augmentant, le nombre de caractéristiques continues quand les valeurs s'y prêtes, on pourrait augmenter la fiabilité des prédictions en ayant plusieurs critéres étant des bons indicateurs.
+Ici nous pouvons voir que le cholestérol (`chol`) est un très bon indicateur pour prédire le risque d'une attaque cardiaque chez une personne. Avec une plage de valeurs continues, il est possible d'enregistrer les personnes ayant un taux de cholestérol très élevé et donc de bien identifier le seuil critique tandis que le taux de sucre dans le sang à jeun (`fbs`) n'apporte pas assez d'indication. Cela s'explique par les valeurs qu'il peut prendre dans le data set (0 ou 1) qui nous permettent seulement de savoir si la personne a un taux supérieur à un seuil et non son taux précis. En augmentant, le nombre de caractéristiques continues quand les valeurs s'y prêtes, on pourrait augmenter la fiabilité des prédictions en ayant plusieurs critères étant des bons indicateurs.
 
 ---
 
@@ -167,7 +167,7 @@ def calcul_coefficients(df):
         - decision_tree, l'objet de l'arbre de décision
     """
     # Séparation des variables et de la cible
-    variables, results = serparer_variables_cible(df)
+    variables, results = separer_variables_cible(df)
 
     # Régression linéaire
     regression = linear_model.LinearRegression()

@@ -14,7 +14,7 @@ def matriceCorrelation(data):
     
     plt.figure(figsize=(12, 8))
     sns.heatmap(df_corr,annot=True, cmap="magma")
-    plt.title("Matrice de corréralation")
+    plt.title("Matrice de corrélation")
     plt.show()
 
 
