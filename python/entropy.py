@@ -66,77 +66,6 @@ def entropie_conditionnelle(data, target):
     
     return dict_sorted
 
-
-def entropie_croisee(data,column, target):
-    """
-    Mesure à quel point une distribution X est bonne pour représenter une autre distribution Y
-    Notion de qualité
-    Plus l'entropie est faible plus Y est proche de X
-    """
-    total_entropie = 0
-    # Distribution conditionnelle P(x | target)
-    distribution = pd.crosstab(data[column], data[target], normalize='columns')
-    distribution_target = data[target].value_counts(normalize=True)
-    # Calcul de l'entropie croisée
-    entropie_croisee = -(distribution * np.log(distribution + 1e-9)).sum(axis=0)
-    total_entropie = np.dot(entropie_croisee, distribution_target.values)
-    return total_entropie.sum()
-
-def entropie_croisee_totale(data, target):
-    dic_entropie = {}
-    for feature in data.columns:
-        if feature == target:
-            continue
-        dic_entropie[feature] = entropie_croisee(data,feature,target)
-     
-    dict_sorted = dict(sorted(dic_entropie.items(), key=lambda item: item[1]))
-       
-    #Graphique
-    colors = plt.cm.viridis(np.linspace(0, 1, len(dict_sorted)))
-    plt.figure(figsize=(10, 7))
-    plt.barh(list(dict_sorted.keys()), list(dict_sorted.values()), color=colors)
-    plt.xlabel("Valeur de l'entropie")
-    plt.ylabel('Paramètres')
-    plt.title('Entropie Croisée')
-    plt.grid(axis='x', linestyle='--', alpha=0.7)
-    plt.tight_layout()
-    plt.show()
-    
-    return dic_entropie
-
-
-def entropie_relative(data,feature,target):
-    """
-    Mesure à quel point une distribution X s'écarte d'une distribution de référence Y
-    E(X,Y)-E(X)
-    Notion d'écart
-    """
-    entropie_relative = entropie_croisee(data, feature) - entropie(data[feature])    
-    return entropie_relative
-
-def entropie_relative_totale(data, target):
-    dict_entropie = {}
-    for feature in data.columns.tolist():
-        if feature == target:
-            continue
-        dict_entropie[feature] = entropie_relative(data,feature,target)
-        
-    dict_sorted = dict(sorted(dict_entropie.items(), key=lambda item: item[1]))
-       
-    #Graphique
-    colors = plt.cm.viridis(np.linspace(0, 1, len(dict_sorted)))
-    plt.figure(figsize=(10, 7))
-    plt.barh(list(dict_sorted.keys()), list(dict_sorted.values()), color=colors)
-    plt.xlabel("Valeur de l'entropie")
-    plt.ylabel('Paramètres')
-    plt.title('Entropie Relative')
-    plt.grid(axis='x', linestyle='--', alpha=0.7)
-    plt.tight_layout()
-    plt.show()
-    
-    return dict_sorted
-
-
 file_name = "cleaned_merged_heart_dataset.csv"
 
 df = pd.read_csv("./data/"+file_name)
@@ -145,6 +74,79 @@ print(entropie_totale(df))
 
 print(entropie_conditionnelle(df,"target"))
 
-print(entropie_croisee_totale(df, "target"))
+#%%
+## Dans ce cas d'utilisation, les entropies croisées et relatives ne sont pas les plus appropriées et n'apporte pas plus d'information  que celle conditionnelle
+# def entropie_croisee(data,column, target):
+#     """
+#     Mesure à quel point une distribution X est bonne pour représenter une autre distribution Y
+#     Notion de qualité
+#     Plus l'entropie est faible plus Y est proche de X
+#     """
+#     total_entropie = 0
+#     # Distribution conditionnelle P(x | target)
+#     distribution = pd.crosstab(data[column], data[target], normalize='columns')
+#     distribution_target = data[target].value_counts(normalize=True)
+#     # Calcul de l'entropie croisée
+#     entropie_croisee = -(distribution * np.log(distribution + 1e-9)).sum(axis=0)
+#     total_entropie = np.dot(entropie_croisee, distribution_target.values)
+#     return total_entropie.sum()
+
+# def entropie_croisee_totale(data, target):
+#     dic_entropie = {}
+#     for feature in data.columns:
+#         if feature == target:
+#             continue
+#         dic_entropie[feature] = entropie_croisee(data,feature,target)
+     
+#     dict_sorted = dict(sorted(dic_entropie.items(), key=lambda item: item[1]))
+       
+#     #Graphique
+#     colors = plt.cm.viridis(np.linspace(0, 1, len(dict_sorted)))
+#     plt.figure(figsize=(10, 7))
+#     plt.barh(list(dict_sorted.keys()), list(dict_sorted.values()), color=colors)
+#     plt.xlabel("Valeur de l'entropie")
+#     plt.ylabel('Paramètres')
+#     plt.title('Entropie Croisée')
+#     plt.grid(axis='x', linestyle='--', alpha=0.7)
+#     plt.tight_layout()
+#     plt.show()
+    
+#     return dic_entropie
+
+
+# def entropie_relative(data,feature,target):
+#     """
+#     Mesure à quel point une distribution X s'écarte d'une distribution de référence Y
+#     E(X,Y)-E(X)
+#     Notion d'écart
+#     """
+#     entropie_relative = entropie_croisee(data, feature) - entropie(data[feature])    
+#     return entropie_relative
+
+# def entropie_relative_totale(data, target):
+#     dict_entropie = {}
+#     for feature in data.columns.tolist():
+#         if feature == target:
+#             continue
+#         dict_entropie[feature] = entropie_relative(data,feature,target)
+        
+#     dict_sorted = dict(sorted(dict_entropie.items(), key=lambda item: item[1]))
+       
+#     #Graphique
+#     colors = plt.cm.viridis(np.linspace(0, 1, len(dict_sorted)))
+#     plt.figure(figsize=(10, 7))
+#     plt.barh(list(dict_sorted.keys()), list(dict_sorted.values()), color=colors)
+#     plt.xlabel("Valeur de l'entropie")
+#     plt.ylabel('Paramètres')
+#     plt.title('Entropie Relative')
+#     plt.grid(axis='x', linestyle='--', alpha=0.7)
+#     plt.tight_layout()
+#     plt.show()
+    
+#     return dict_sorted
+
+#print(entropie_croisee_totale(df, "target"))
 
 #print(entropie_relative_totale(df, "target"))
+
+

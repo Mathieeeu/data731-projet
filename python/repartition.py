@@ -31,7 +31,6 @@ df_target_1 = df[df['target'] == 1]
 df_target_0 = df[df['target'] == 0]
 
 repartitionParCaractere(df_target_1, df_target_0, "age", nb_barres)
-#repartitionParCaractere(df, "age", nb_barres)
 repartitionParCaractere(df_target_1,df_target_0, "sex", 2)
 repartitionParCaractere(df_target_1,df_target_0, "cp", 5)
 repartitionParCaractere(df_target_1,df_target_0, "trestbps", nb_barres)
